@@ -1,14 +1,14 @@
 defmodule PlugCgi.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
   @repo_url "https://github.com/rushsteve1/plug_cgi"
 
   def project do
     [
       app: :plug_cgi,
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.7",
       source_url: @repo_url,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -44,9 +44,10 @@ defmodule PlugCgi.MixProject do
 
   def docs do
     [
+      extras: ["README.md"],
+      main: "readme",
       source_ref: "v#{@version}",
-      source_url: @repo_url,
-      main: "Plug.CGI"
+      source_url: @repo_url
     ]
   end
 end
