@@ -1,7 +1,8 @@
 defmodule Plug.CGI do
   @moduledoc """
   Primary public module for `plug_cgi`.
-  See [`run/1`](#run/1) below for the main entrypoint of `plug_cgi`.
+  See [`run/1`](https://hexdocs.pm/plug_cgi/Plug.CGI.html#run/2)
+  below for the main entrypoint of `plug_cgi`.
 
   This module can also be used in a supervisor since it provides a `child_spec/1`
   ```
@@ -38,6 +39,8 @@ defmodule Plug.CGI do
   defaults to `:stdio`.
 
   The `opts` argument is also passed along to
+  [`Plug.init/1`](https://hexdocs.pm/plug/Plug.html#c:init/1) for the given `plug`
+  and `call_opts` option will be passed into
   [`Plug.call/2`](https://hexdocs.pm/plug/Plug.html#c:call/2) for the given `plug`.
 
   ## Example
@@ -45,10 +48,7 @@ defmodule Plug.CGI do
   defmodule MyPlug do
     import Plug.Conn
 
-    def init(options) do
-      # initialize options
-      options
-    end
+    def init(options), do: options
 
     def call(conn, _opts) do
       conn
@@ -67,8 +67,12 @@ defmodule Plug.CGI do
     console = Application.fetch_env!(:logger, :console)
     Application.put_env(:logger, :console, Keyword.merge([device: log_device], console))
 
-    System.get_env()
-    |> Plug.CGI.Conn.conn(opts)
-    |> plug.call(opts)
+    conn =
+      System.get_env()
+      |> Plug.CGI.Conn.conn(opts)
+
+    plug.init(opts)
+
+    plug.call(conn, Keyword.get(opts, :call_opts))
   end
 end

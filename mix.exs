@@ -1,17 +1,21 @@
 defmodule PlugCgi.MixProject do
   use Mix.Project
 
+  @version "0.1.1"
+  @repo_url "https://github.com/rushsteve1/plug_cgi"
+
   def project do
     [
       app: :plug_cgi,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.13",
-      source_url: "https://github.com/rushsteve1/plug_cgi",
+      source_url: @repo_url,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
-      description: description(),
-      aliases: aliases()
+      docs: docs(),
+      description: "Plug adapter for the Common Gateway Interface",
+      aliases: ["cgi.serve": ["cmd python3 -m http.server --cgi"]]
     ]
   end
 
@@ -34,17 +38,15 @@ defmodule PlugCgi.MixProject do
   defp package do
     [
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/rushsteve1/plug_cgi"}
+      links: %{"GitHub" => @repo_url}
     ]
   end
 
-  defp description do
-    "Plug adapter for the Common Gateway Interface"
-  end
-
-  defp aliases do
+  def docs do
     [
-      "cgi.serve": ["cmd python3 -m http.server --cgi"]
+      source_ref: "v#{@version}",
+      source_url: @repo_url,
+      main: "Plug.CGI"
     ]
   end
 end
