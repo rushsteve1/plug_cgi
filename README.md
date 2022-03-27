@@ -11,7 +11,8 @@ See the [Plug documentation](https://hexdocs.pm/plug/) for more information.
 
 ## Example
 
-There are more examples in the [`cgi-bin` folder](./cgi-bin).
+There are more examples in the
+[`cgi-bin` folder](https://github.com/rushsteve1/plug_cgi/tree/main/cgi-bin).
 
 ```elixir
 #!/usr/bin/env elixir

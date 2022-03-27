@@ -16,10 +16,12 @@ defmodule Plug.CGI.Conn do
     adapter =
       {__MODULE__,
        %{
-         raw_protcol: Map.get(env, "SERVER_PROTOCOL"),
+         raw_protcol: Map.get(env, "SERVER_PROTOCOL", "HTTP/1.0"),
          test_body: Keyword.get(opts, :test_body),
          output_device: Keyword.get(opts, :output_device, :stdio)
        }}
+
+    path = Map.get(env, "PATH_INFO", "/")
 
     %Plug.Conn{
       adapter: adapter,
@@ -28,9 +30,9 @@ defmodule Plug.CGI.Conn do
       method: Map.get(env, "REQUEST_METHOD", "") |> String.upcase(),
       owner: self(),
       remote_ip: remote_ip,
-      request_path: Map.get(env, "PATH_INFO"),
-      script_name: Map.get(env, "SCRIPT_NAME") |> split_path(),
-      path_info: Map.get(env, "PATH_INFO") |> split_path(),
+      request_path: path,
+      path_info: path |> split_path(),
+      script_name: Map.get(env, "SCRIPT_NAME", "") |> split_path(),
       query_string: Map.get(env, "QUERY_STRING", ""),
       port: Map.get(env, "SERVER_PORT", "-1") |> String.to_integer(),
       req_headers: request_headers(env)
@@ -112,7 +114,7 @@ defmodule Plug.CGI.Conn do
         is_integer(length) -> length
       end
 
-    send_headers(payload, status, headers)
+    send_headers(payload, status, [{"content-length", length |> Integer.to_string()} | headers])
 
     body =
       File.stream!(path, [], 1)
@@ -120,7 +122,7 @@ defmodule Plug.CGI.Conn do
       |> Enum.take(length)
       |> to_string()
 
-    IO.write(payload.output_device, "\n" <> body)
+    IO.write(payload.output_device, body)
 
     {:ok, nil, payload}
   end
@@ -134,11 +136,13 @@ defmodule Plug.CGI.Conn do
 
   @impl true
   def send_resp(payload, status, headers, body) do
-    send_headers(payload, status, headers)
+    send_headers(payload, status, [
+      {"content-length", body |> byte_size() |> Integer.to_string()} | headers
+    ])
 
     if body do
       # Blank line between header and body
-      IO.write(payload.output_device, "\n" <> body)
+      IO.write(payload.output_device, body)
     end
 
     {:ok, nil, payload}
@@ -164,6 +168,9 @@ defmodule Plug.CGI.Conn do
     for header <- headers do
       IO.puts(payload.output_device, elem(header, 0) <> ": " <> elem(header, 1))
     end
+
+    # Blank line between header and body
+    IO.puts("")
   end
 
   defp slugify(str) do

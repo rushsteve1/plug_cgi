@@ -1,7 +1,7 @@
 defmodule PlugCgi.MixProject do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.1.3"
   @repo_url "https://github.com/rushsteve1/plug_cgi"
 
   def project do
