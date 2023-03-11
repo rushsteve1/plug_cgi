@@ -1,7 +1,7 @@
 defmodule PlugCgi.MixProject do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.1.4"
   @repo_url "https://github.com/rushsteve1/plug_cgi"
 
   def project do
@@ -29,9 +29,9 @@ defmodule PlugCgi.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug, "~> 1.13"},
+      {:plug, "~> 1.14"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]
   end
 

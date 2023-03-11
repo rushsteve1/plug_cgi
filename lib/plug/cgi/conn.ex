@@ -40,6 +40,12 @@ defmodule Plug.CGI.Conn do
   end
 
   @impl true
+  def upgrade(_payload, _protocol, _opts) do
+    # CGI only supports HTTP/1.1 so upgrading is not supported
+    {:error, :not_supported}
+  end
+
+  @impl true
   def chunk(%Plug.Conn{method: "HEAD"} = _payload, _body), do: :ok
 
   @impl true
@@ -140,10 +146,8 @@ defmodule Plug.CGI.Conn do
       {"content-length", body |> byte_size() |> Integer.to_string()} | headers
     ])
 
-    if body do
-      # Blank line between header and body
-      IO.write(payload.output_device, body)
-    end
+    # Blank line between header and body
+    IO.write(payload.output_device, body)
 
     {:ok, nil, payload}
   end
