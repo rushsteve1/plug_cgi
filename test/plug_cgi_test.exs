@@ -129,6 +129,17 @@ defmodule PlugCGITest do
     assert StringIO.flush(state.output_device) =~ body
   end
 
+  test "can respond with a content-type and body", state do
+    type = "text/plain"
+    body = "Hello world"
+
+    state.conn
+    |> Plug.Conn.put_resp_content_type(type)
+    |> Plug.Conn.send_resp(200, body)
+
+    assert StringIO.flush(state.output_device) =~ body
+  end
+
   test "can respond with a file", state do
     # Arbitrary short file
     path = ".tool-versions"

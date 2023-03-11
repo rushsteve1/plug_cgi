@@ -1,5 +1,8 @@
 # Plug_CGI
 
+[Hex Package](https://hex.pm/packages/plug_cgi)
+[Hex Docs](https://hexdocs.pm/plug_cgi)
+
 A Plug adapter for the Common Gateway Interface,
 allowing you to use all your favorite middleware and tools with the simplicity
 of CGI web servers.
@@ -45,8 +48,8 @@ Plug.CGI.run MyPlug
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `plug_cgi` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `plug_cgi` to your list of dependencies
+in `mix.exs`:
 
 ```elixir
 def deps do
@@ -56,6 +59,21 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/plug_cgi>.
+## Single-File Elixir Scripts
+
+You can use `plug_cgi` in
+[single-file Elixir scripts](https://fly.io/phoenix-files/single-file-elixir-scripts/)
+by adding it to your `Mix.install/2` call:
+
+```elixir
+Mix.install([ 
+  :plug_cgi, 
+])
+```
+
+When using single-file scripts with CGI you may need to set your `HOME`
+environment variable. This can be done by editing the shebang line to:
+
+```sh
+#!/usr/bin/env HOME=/home/user elixir
+```
